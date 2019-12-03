@@ -25,6 +25,7 @@ import (
 	"context"
 	"errors"
 	"sync"
+	"fmt"
 	"sync/atomic"
 
 	"github.com/liquidata-inc/dolt/go/store/atomicerr"
@@ -455,10 +456,12 @@ func (ts tableSet) Rebase(ctx context.Context, specs []tableSpec, stats *Stats) 
 						return
 					}
 					if spec.name == h {
+						print("merging existing upstream ", fmt.Sprintf("%v", spec.name), "\n")
 						merged.upstream[idx] = existing
 						return
 					}
 				}
+				print("opening ", fmt.Sprintf("%v", spec.name), "\n")
 				merged.upstream[idx], err = ts.p.Open(ctx, spec.name, spec.chunkCount, stats)
 				ae.SetIfError(err)
 			}
